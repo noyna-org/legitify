@@ -14,9 +14,9 @@ builds:
     ldflags:
       - '-s'
       - '-w'
-      - '-X=github.com/Legit-Labs/legitify/internal/version.Name={{ .ProjectName }}'
-      - '-X=github.com/Legit-Labs/legitify/internal/version.Version={{ .Version }}'
-      - '-X=github.com/Legit-Labs/legitify/internal/version.Commit={{ .Commit }}'
+      - '-X=github.com/noyna-org/legitify/internal/version.Name={{ .ProjectName }}'
+      - '-X=github.com/noyna-org/legitify/internal/version.Version={{ .Version }}'
+      - '-X=github.com/noyna-org/legitify/internal/version.Commit={{ .Commit }}'
       - '-extldflags=-static'
     targets:
       - 'darwin_amd64'
@@ -32,14 +32,14 @@ builds:
 dockers:
   -
     image_templates:
-      - 'ghcr.io/legit-labs/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}'
-      - 'ghcr.io/legit-labs/{{ .ProjectName }}:latest'
+      - 'ghcr.io/noyna-org/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}'
+      - 'ghcr.io/noyna-org/{{ .ProjectName }}:latest'
     build_flag_templates:
       - '--pull'
       - '--label=org.opencontainers.image.created={{ .CommitTimestamp }}'
       - '--label=org.opencontainers.image.description=Strengthen the security posture of your GitHub organization!'
       - '--label=org.opencontainers.image.revision={{ .FullCommit }}'
-      - '--label=org.opencontainers.image.source=https://github.com/legit-labs/legitify'
+      - '--label=org.opencontainers.image.source=https://github.com/noyna-org/legitify'
       - '--label=org.opencontainers.image.title={{ .ProjectName }}'
       - '--label=org.opencontainers.image.version={{ .Version }}'
 
