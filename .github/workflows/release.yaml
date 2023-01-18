@@ -140,7 +140,7 @@ jobs:
   
   publish_release:
     needs: [provenance]
-    uses: softprops/action-gh-release@v1
+    uses: softprops/action-gh-release@d4e8205
     if: startsWith(github.ref, 'refs/tags/')
     with:
       files: |
