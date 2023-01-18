@@ -138,11 +138,11 @@ jobs:
       base64-subjects: "${{ needs.goreleaser.outputs.hashes }}"
       upload-assets: true # upload to a new release
   
-  publish_release:
-    needs: [provenance]
-    uses: softprops/action-gh-release@d4e8205
-    if: startsWith(github.ref, 'refs/tags/')
-    with:
-      files: |
-        Release.txt
-        LICENSE
+  # publish_release:
+  #   needs: [provenance]
+  #   uses: softprops/action-gh-release@d4e8205
+  #   if: startsWith(github.ref, 'refs/tags/')
+  #   with:
+  #     files: |
+  #       Release.txt
+  #       LICENSE
