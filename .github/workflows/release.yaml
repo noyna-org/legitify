@@ -148,7 +148,7 @@ jobs:
       id-token: write # To sign the provenance.
       contents: write # To add assets to a release.
     env:
-      MACOS_ARTIFACTS_DOWNLOAD_PATH: /tmp/macos_archives
+      ARTIFACTS_DOWNLOAD_PATH: /tmp/macos_archives
     steps:
       - uses: 'actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b'
         with:
