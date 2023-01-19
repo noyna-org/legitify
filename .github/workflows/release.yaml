@@ -163,7 +163,7 @@ jobs:
           path: ${{ env.GORELEASER_ARTIFACTS_DOWNLOAD_PATH }}
       - name: prepare-release-files
         run: |
-          find . -type f -not -name '*darwin*' -depth 1 -exec cp {} ${{ env.ARTIFACTS_DOWNLOAD_PATH }} \;
+          find ${{ env.GORELEASER_ARTIFACTS_DOWNLOAD_PATH }} -type f -not -name '*darwin*' -depth 1 -exec cp {} ${{ env.ARTIFACTS_DOWNLOAD_PATH }}/ \;
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
