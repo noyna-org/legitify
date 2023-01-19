@@ -167,7 +167,7 @@ jobs:
         with:
           files: ${{ env.ARTIFACTS_DOWNLOAD_PATH }}
   provenance:
-    needs: [goreleaser]
+    needs: macos_sign
     permissions:
       actions: read # To read the workflow path.
       id-token: write # To sign the provenance.
