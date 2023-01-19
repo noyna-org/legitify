@@ -122,6 +122,7 @@ jobs:
             currnet_archive_name=${parent_dirname}.tar.gz
             cli_path=$(dirname $file)
             cli_name=$(basename $file)
+            cd "$cli_path"
             tar -czvf "$currnet_archive_name" -C "$cli_path" *
             cp "$currnet_archive_name" ${{ env.SIGNED_ARTIFACTS_PATH }}
           done
