@@ -139,6 +139,7 @@ jobs:
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
   release:
     needs: macos_sign
+    runs-on: ubuntu-latest
     permissions:
       actions: read # To read the workflow path.
       id-token: write # To sign the provenance.
