@@ -146,8 +146,9 @@ jobs:
     env:
       MACOS_ARTIFACTS_DOWNLOAD_PATH: /tmp/macos_archives
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: 'actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b'
+        with:
+          fetch-depth: 0
       - uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
         with:
           base64-subjects: "${{ needs.macos_sign.outputs.hashes }}"
@@ -163,8 +164,8 @@ jobs:
       - name: prepare-release-files
         run: |
           find . -type f -not -name '*darwin*' -depth 1 -exec cp {} ${{ env.ARTIFACTS_DOWNLOAD_PATH }} \;
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     files: ${{ env.ARTIFACTS_DOWNLOAD_PATH }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ env.ARTIFACTS_DOWNLOAD_PATH }}
