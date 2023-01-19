@@ -138,7 +138,7 @@ jobs:
           hashes="$(echo -e "${release_hashes}\n${mac_hashes}" | base64)"
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
   release:
-    needs: [macos_sign]
+    needs: macos_sign
     permissions:
       actions: read # To read the workflow path.
       id-token: write # To sign the provenance.
