@@ -137,3 +137,16 @@ jobs:
           release_hashes="$(echo "${{ needs.goreleaser.outputs.hashes }}" | base64 -d)" # without darwin
           hashes="$(echo -e "${release_hashes}\n${mac_hashes}" | base64)"
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
+  release:
+    needs: macos_sign
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read # To read the workflow path.
+      id-token: write # To sign the provenance.
+      contents: write # To add assets to a release.
+    env:
+      MACOS_ARTIFACTS_DOWNLOAD_PATH: /tmp/macos_archives
+    steps:
+      - uses: 'actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b'
+        with:
+          fetch-depth: 0
