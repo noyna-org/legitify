@@ -137,7 +137,7 @@ jobs:
           cd "${{ env.SIGNED_ARTIFACTS_PATH }}"
           mac_hashes="$(shasum -a 256 *.tar.gz)"
           release_hashes="$(echo "${{ needs.goreleaser.outputs.hashes }}" | base64 -d)" # without darwin
-          hashes="$(echo "${release_hashes}\n${mac_hashes}" | base64)"
+          hashes="$(echo -e "${release_hashes}\n${mac_hashes}" | base64)"
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
 
   provenance:
