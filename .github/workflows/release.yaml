@@ -33,6 +33,7 @@ jobs:
       - name: save keys to files
         run: echo ${{ secrets.WINDOWS_PUBLIC_KEY_B64 }} | base64 -d > /tmp/legit_signature.crt ; echo ${{ secrets.WINDOWS_PRIVATE_KEY_B64 }} | base64 -d > /tmp/legit_signature.key
       - uses: goreleaser/goreleaser-action@b953231f81b8dfd023c58e0854a721e35037f28b
+        id: run-goreleaser
         with:
           version: latest
           args: "release --rm-dist"
@@ -49,12 +50,14 @@ jobs:
           ARTIFACTS: "${{ steps.run-goreleaser.outputs.artifacts }}"
         run: |
           set -euo pipefail
-          hashes=$(echo $ARTIFACTS | jq --raw-output '.[] | {name, "digest": (.extra.Digest // .extra.Checksum)} | select(.digest) | {digest} + {name} | join("  ") | sub("^sha256:";"")' | base64 -w0)
+          hashes=$(echo $ARTIFACTS | jq --raw-output '.[] | {name, "digest": (.extra.Digest // .extra.Checksum)} | select(.digest) | {digest} + {name} | join("  ") | sub("^sha256:";"")' | grep -v darwin | base64 -w0)
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
  
   macos_sign:
     needs: goreleaser
     runs-on: macos-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
     env:
       SIGNED_ARTIFACTS_PATH: /tmp/signed
       GORELEASER_ARTIFACTS_DOWNLOAD_PATH: /tmp/archives
@@ -127,6 +130,16 @@ jobs:
         with:
           name: signed_macos_release
           path: ${{ env.SIGNED_ARTIFACTS_PATH }}
+      - name: provenance-inputs
+        id: hash
+        run: |
+          set -euo pipefail
+          cd "${{ env.SIGNED_ARTIFACTS_PATH }}"
+          release_hashes="$(echo "${{ needs.goreleaser.outputs.hashes }}" | base64 -d)" # without darwin
+          mac_hashes="$(sha256sum *tar.gz)"
+          hashes="$(echo "${release_hashes}${mac_hashes}" | base64 -w0)"
+          echo "hashes=$hashes" >> $GITHUB_OUTPUT
+
   provenance:
     needs: [macos_sign]
     permissions:
@@ -135,14 +148,14 @@ jobs:
       contents: write # To add assets to a release.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
     with:
-      base64-subjects: "${{ needs.goreleaser.outputs.hashes }}"
+      base64-subjects: "${{ needs.macos_sign.outputs.hashes }}"
       upload-assets: true # upload to a new release
   
-  # publish_release:
-  #   needs: [provenance]
-  #   uses: softprops/action-gh-release@d4e8205
-  #   if: startsWith(github.ref, 'refs/tags/')
-  #   with:
-  #     files: |
-  #       Release.txt
-  #       LICENSE
+  publish_release:
+    needs: [provenance]
+    uses: softprops/action-gh-release@d4e8205
+    if: startsWith(github.ref, 'refs/tags/')
+    with:
+      files: |
+        Release.txt
+        LICENSE
