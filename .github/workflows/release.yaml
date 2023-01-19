@@ -135,9 +135,9 @@ jobs:
         run: |
           set -euo pipefail
           cd "${{ env.SIGNED_ARTIFACTS_PATH }}"
+          mac_hashes="$(shasum -a 256 *.tar.gz)"
           release_hashes="$(echo "${{ needs.goreleaser.outputs.hashes }}" | base64 -d)" # without darwin
-          mac_hashes="$(sha256sum *tar.gz)"
-          hashes="$(echo "${release_hashes}${mac_hashes}" | base64 -w0)"
+          hashes="$(echo "${release_hashes}\n${mac_hashes}" | base64)"
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
 
   provenance:
