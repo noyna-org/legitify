@@ -76,6 +76,7 @@ jobs:
           PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_APPLE_ID }}
           PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
           PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.MACOS_NOTARIZATION_PWD }}
+          SIGNED_ARTIFACTS_PATH: /tmp/signed_path
         run: |
           echo "extracting files to sign"
           extracted_files=()
@@ -115,14 +116,14 @@ jobs:
             echo "Notarize app"
             xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
           done
-          mkdir $SIGNED_ARTIFACTS_PATH
+          mkdir ${{ env.SIGNED_ARTIFACTS_PATH }}
           for file in "${extracted_files[@]}"; do
             parent_dirname=$(basename "$(dirname "$file")")
             currnet_archive_name=${parent_dirname}.tar.gz
             cli_path=$(dirname $file)
             cli_name=$(basename $file)
             tar -czvf "$currnet_archive_name" -C "$cli_path" *
-            cp "$currnet_archive_name" $SIGNED_ARTIFACTS_PATH
+            cp "$currnet_archive_name" ${{ env.SIGNED_ARTIFACTS_PATH }}
           done
       - uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # ratchet:actions/upload-artifact@v3
         with:
