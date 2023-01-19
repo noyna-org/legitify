@@ -59,6 +59,8 @@ jobs:
     runs-on: macos-latest
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
+    env:
+      SIGNED_ARTIFACTS_PATH: /tmp/signed_path
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
         with:
@@ -76,7 +78,6 @@ jobs:
           PROD_MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_APPLE_ID }}
           PROD_MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
           PROD_MACOS_NOTARIZATION_PWD: ${{ secrets.MACOS_NOTARIZATION_PWD }}
-          SIGNED_ARTIFACTS_PATH: /tmp/signed_path
         run: |
           echo "extracting files to sign"
           extracted_files=()
