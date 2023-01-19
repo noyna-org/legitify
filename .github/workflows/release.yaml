@@ -137,7 +137,6 @@ jobs:
           release_hashes="$(echo "${{ needs.goreleaser.outputs.hashes }}" | base64 -d)" # without darwin
           hashes="$(echo -e "${release_hashes}\n${mac_hashes}" | base64)"
           echo "hashes=$hashes" >> $GITHUB_OUTPUT
-
   release:
     needs: [macos_sign]
     permissions:
