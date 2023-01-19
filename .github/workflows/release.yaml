@@ -31,7 +31,7 @@ jobs:
           username: '${{ github.actor }}'
           password: '${{ secrets.GITHUB_TOKEN }}'
       - name: save keys to files
-        run: echo ${{ secrets.WINDOWS_PUBLIC_KEY_B64 }} | base64 -d > /tmp/legit_signature.crt ; echo ${{ secrets.WINDOWS_PRIVATE_KEY_B64 }} | base64 -d > /tmp/legit_signature.key
+        run: echo ${{ secrets.WINDOWS_PUBLIC_KEY_B64 }} | base64 -d > /tmp/legitify_signature.crt ; echo ${{ secrets.WINDOWS_PRIVATE_KEY_B64 }} | base64 -d > /tmp/legitify_signature.key
       - uses: goreleaser/goreleaser-action@b953231f81b8dfd023c58e0854a721e35037f28b
         with:
           version: latest
@@ -82,7 +82,7 @@ jobs:
              dirname="${file%.tar.gz}"
              mkdir "$dirname"
              tar -xzvf "$file" -C "$dirname"
-             extracted_files+=($dirname/legit)
+             extracted_files+=($dirname/legitify)
           done
           echo "Prepare keychain to sign"
           echo $MACOS_CERTIFICATE | base64 -d > certificate.p12
