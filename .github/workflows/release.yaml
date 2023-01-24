@@ -168,7 +168,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         # if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ env.ARTIFACTS_DOWNLOAD_PATH }}
+          files: ${{ env.ARTIFACTS_DOWNLOAD_PATH }}/*
   provenance:
     needs: macos_sign
     permissions:
